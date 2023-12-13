@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,12 +21,14 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MainActivity extends AppCompatActivity {
 
     // AddressHelper 클래스의 인스턴스와 SQLiteDatabase 인스턴스 선언
     AddressHelper helper;
     SQLiteDatabase db;
-    String sql = "select _id, name, phone, juso from address";
+    String sql = "select _id, name, phone, juso, photo from address";
     JusoAdapter jusoAdapter;
 
     @Override
@@ -65,23 +68,27 @@ public class MainActivity extends AppCompatActivity {
     // 액션바의 아이템(여기서는 뒤로가기 버튼) 클릭 시 호출되는 메서드
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        sql = "select _id, name, phone, juso from address";
+        sql = "select _id, name, phone, juso, photo from address";
 
         // 뒤로가기 버튼이 클릭되었을 때
         if(item.getItemId() == android.R.id.home) {
-            finish(); // 현재 액티비티 종료
-        } else if(item.getItemId() == R.id.name) {
+            finish();
+        }else if(item.getItemId() == R.id.name) {
             sql += " order by name";
-        } else if(item.getItemId() == R.id.phone) {
+        }else if(item.getItemId() == R.id.phone) {
             sql += " order by phone";
-        } else if(item.getItemId() == R.id.juso) {
+        }else if(item.getItemId() == R.id.juso) {
             sql += " order by juso";
+        }else if(item.getItemId() == R.id.photo) {
+            sql += " order by photo";
         }
         onRestart();
+
         return super.onOptionsItemSelected(item);
     }
     class JusoAdapter extends CursorAdapter {
 
+        //생성자
         public JusoAdapter(Context context, Cursor c) {
             super(context, c);
         }
@@ -94,17 +101,27 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
+
             int id = cursor.getInt(0);
 
             TextView name = view.findViewById(R.id.name);
             name.setText(cursor.getString(1));
-            name.setTypeface(null, Typeface.BOLD);
 
             TextView phone = view.findViewById(R.id.phone);
             phone.setText(cursor.getString(2));
 
             TextView juso = view.findViewById(R.id.juso);
             juso.setText(cursor.getString(3));
+
+            CircleImageView photo = view.findViewById(R.id.photo);
+            String strPhoto = cursor.getString(4);
+            if(strPhoto.equals("")) {
+                // 만약 사진이 없다면 기본 이미지를 설정
+                photo.setImageResource(R.drawable.baseprofile);
+            }else {
+                photo.setImageURI(Uri.parse(strPhoto));
+            }
+
 
             //Delete버튼
             view.findViewById(R.id.btnDelete).setOnClickListener(new View.OnClickListener() {
@@ -154,7 +171,8 @@ public class MainActivity extends AppCompatActivity {
                 sql = "select _id, name, phone, juso from address ";
                 sql += "where name like '%" + query + "%' or ";
                 sql += "phone like '%" + query + "%' or ";
-                sql += "juso like '%" + query + "%'";
+                sql += "juso like '%" + query + "%' or ";
+                sql += "photo like '%" + query + "%'";
                 onRestart();
                 return false;
             }

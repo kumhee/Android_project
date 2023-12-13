@@ -8,17 +8,21 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class UpdateActivity extends AppCompatActivity {
 
     AddressHelper helper;
     SQLiteDatabase db;
     EditText name, phone, juso;
+    CircleImageView photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,16 +42,25 @@ public class UpdateActivity extends AppCompatActivity {
         db = helper.getWritableDatabase();
 
         // 결과 넣어주기
-        Cursor cursor = db.rawQuery("select _id, name, phone, juso from address where _id=" + id, null);
+        Cursor cursor = db.rawQuery("select _id, name, phone, juso, photo from address where _id=" + id, null);
 
         name = findViewById(R.id.name);
         phone = findViewById(R.id.phone);
         juso = findViewById(R.id.juso);
+        photo = findViewById(R.id.photo);
 
-        if (cursor.moveToFirst()) { // cursor를 이동하도록 수정
+        if (cursor.moveToFirst()) {
             name.setText(cursor.getString(1));
             phone.setText(cursor.getString(2));
             juso.setText(cursor.getString(3));
+
+            // 사진 처리 추가
+            String strPhoto = cursor.getString(4);
+            if(strPhoto.equals("")) {
+                photo.setImageResource(R.drawable.baseprofile);
+            }else {
+                photo.setImageURI(Uri.parse(cursor.getString(4)));
+            }
         }
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +89,7 @@ public class UpdateActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
+        if(item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
