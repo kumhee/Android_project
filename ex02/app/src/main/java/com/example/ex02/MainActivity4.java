@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DecimalFormat;
 
@@ -45,6 +47,15 @@ public class MainActivity4 extends AppCompatActivity {
         //ListView 어뎁터 연결
         ListView list=findViewById(R.id.list);
         list.setAdapter(adapter);
+
+        findViewById(R.id.btnInsert).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity4.this, InsertActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public class MyAdapter extends CursorAdapter {
@@ -90,9 +101,22 @@ public class MainActivity4 extends AppCompatActivity {
                             })
                             .setNegativeButton("아니오", null)
                             .show();
-
+                }
+            });
+            view.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity4.this, UpdateActivity.class);
+                    intent.putExtra("id", id);
+                    startActivity(intent);
                 }
             });
         }
+    }
+    @Override
+    protected void onRestart() {
+        String sql = "select _id, name, price from product";
+        Cursor cursor1 = db.rawQuery(sql, null);
+        adapter.changeCursor(cursor1);
+        super.onRestart();
     }
 }

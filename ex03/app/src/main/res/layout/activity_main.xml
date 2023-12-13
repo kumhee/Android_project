@@ -4,23 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity4"
-    android:orientation="vertical">
+    tools:context=".MainActivity"
+    android:background="#FFFFFF">
 
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnInsert"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="106dp"
+        android:layout_height="102dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10sp"
-        android:layout_marginRight="10sp"
-        android:backgroundTint="#ccc"
-        android:src="@drawable/baseline_add_24"/>
+        android:layout_marginStart="20sp"
+        android:layout_marginTop="20sp"
+        android:layout_marginEnd="20sp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/baseline_add_24"
+        app:backgroundTint="#A5B3FF"/>
 
 </RelativeLayout>
