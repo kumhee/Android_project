@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -25,7 +24,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
-    // AddressHelper 클래스의 인스턴스와 SQLiteDatabase 인스턴스 선언
     AddressHelper helper;
     SQLiteDatabase db;
     String sql = "select _id, name, phone, juso, photo from address";
@@ -36,12 +34,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // 액션바(앱의 상단바) 설정
-        getSupportActionBar().setTitle("주소관리"); // 앱 제목 설정
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 표시
+        getSupportActionBar().setTitle("주소관리");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // AddressHelper를 사용하여 데이터베이스를 열기
-        helper = new AddressHelper(this);
+        //db 오픈
+        helper = new AddressHelper(this); //context => this
         db = helper.getReadableDatabase();
 
         //데이터 생성
@@ -50,27 +47,24 @@ public class MainActivity extends AppCompatActivity {
         //어댑터 생성
         jusoAdapter = new JusoAdapter(this, cursor);
 
-        //ListView에 어댑터 연결
+        //ListView 어댑터 연결
         ListView list = findViewById(R.id.list);
         list.setAdapter(jusoAdapter);
 
-        //버튼 클릭하면 주소등록으로 이동
         findViewById(R.id.btnInsert).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 이동
                 Intent intent = new Intent(MainActivity.this, InsertActivity.class);
                 startActivity(intent);
             }
         });
 
-    }//onCreate
+    } //onCreate
 
-    // 액션바의 아이템(여기서는 뒤로가기 버튼) 클릭 시 호출되는 메서드
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         sql = "select _id, name, phone, juso, photo from address";
-
-        // 뒤로가기 버튼이 클릭되었을 때
         if(item.getItemId() == android.R.id.home) {
             finish();
         }else if(item.getItemId() == R.id.name) {
@@ -79,13 +73,12 @@ public class MainActivity extends AppCompatActivity {
             sql += " order by phone";
         }else if(item.getItemId() == R.id.juso) {
             sql += " order by juso";
-        }else if(item.getItemId() == R.id.photo) {
-            sql += " order by photo";
         }
         onRestart();
 
         return super.onOptionsItemSelected(item);
     }
+
     class JusoAdapter extends CursorAdapter {
 
         //생성자
@@ -116,14 +109,11 @@ public class MainActivity extends AppCompatActivity {
             CircleImageView photo = view.findViewById(R.id.photo);
             String strPhoto = cursor.getString(4);
             if(strPhoto.equals("")) {
-                // 만약 사진이 없다면 기본 이미지를 설정
                 photo.setImageResource(R.drawable.baseprofile);
             }else {
                 photo.setImageURI(Uri.parse(strPhoto));
             }
 
-
-            //Delete버튼
             view.findViewById(R.id.btnDelete).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -133,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                             .setPositiveButton("예", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    String sql = "delete from address where _id = " + id;
+                                    String sql = "delete from address where _id=" + id;
                                     db.execSQL(sql);
                                     onRestart();
                                 }
@@ -160,23 +150,23 @@ public class MainActivity extends AppCompatActivity {
         jusoAdapter.changeCursor(cursor);
     }
 
-    //메뉴등록
+    //메뉴 등록
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-        SearchView searchView = (SearchView)menu.findItem(R.id.search).getActionView();
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                sql = "select _id, name, phone, juso from address ";
-                sql += "where name like '%" + query + "%' or ";
-                sql += "phone like '%" + query + "%' or ";
-                sql += "juso like '%" + query + "%' or ";
-                sql += "photo like '%" + query + "%'";
+                sql = "select _id, name, phone, juso, photo from address ";
+                sql += "where juso like '%" + query + "%'";
+                sql += " or name like '%" + query + "%'";
+                sql += " or phone like '%" + query + "%'";
+                sql += " or photo like '%" + query + "%'";
                 onRestart();
                 return false;
             }
-
 
             @Override
             public boolean onQueryTextChange(String newText) {
@@ -185,4 +175,4 @@ public class MainActivity extends AppCompatActivity {
         });
         return super.onCreateOptionsMenu(menu);
     }
-}//Activity
+} //Activity

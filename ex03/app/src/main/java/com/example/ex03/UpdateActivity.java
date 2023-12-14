@@ -22,6 +22,7 @@ public class UpdateActivity extends AppCompatActivity {
     AddressHelper helper;
     SQLiteDatabase db;
     EditText name, phone, juso;
+
     CircleImageView photo;
 
     @Override
@@ -30,18 +31,15 @@ public class UpdateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_insert);
 
         getSupportActionBar().setTitle("정보수정");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 뒤로가기
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Button btnUpdate = findViewById(R.id.btnInsert);
         btnUpdate.setText("수정");
 
-        // 정보수정으로 갔을 때 읽어온 값 넣어주기
         Intent intent = getIntent();
         int id = intent.getIntExtra("id", 0);
 
         helper = new AddressHelper(this);
         db = helper.getWritableDatabase();
-
-        // 결과 넣어주기
         Cursor cursor = db.rawQuery("select _id, name, phone, juso, photo from address where _id=" + id, null);
 
         name = findViewById(R.id.name);
@@ -49,12 +47,10 @@ public class UpdateActivity extends AppCompatActivity {
         juso = findViewById(R.id.juso);
         photo = findViewById(R.id.photo);
 
-        if (cursor.moveToFirst()) {
+        if(cursor.moveToNext()){
             name.setText(cursor.getString(1));
             phone.setText(cursor.getString(2));
             juso.setText(cursor.getString(3));
-
-            // 사진 처리 추가
             String strPhoto = cursor.getString(4);
             if(strPhoto.equals("")) {
                 photo.setImageResource(R.drawable.baseprofile);
@@ -75,7 +71,7 @@ public class UpdateActivity extends AppCompatActivity {
                                 String sql = "update address set ";
                                 sql += "name='" + name.getText().toString() + "',";
                                 sql += "phone='" + phone.getText().toString() + "',";
-                                sql += "juso='" + juso.getText().toString() + "' ";
+                                sql += "juso='" + juso.getText().toString() + "'";
                                 sql += "where _id=" + id;
                                 db.execSQL(sql);
                                 finish();
@@ -85,7 +81,8 @@ public class UpdateActivity extends AppCompatActivity {
                         .show();
             }
         });
-    }
+
+    } //OnCreate
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
