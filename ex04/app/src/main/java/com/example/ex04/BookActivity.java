@@ -157,6 +157,7 @@ public class BookActivity extends AppCompatActivity {
                     View view = (View)View.inflate(BookActivity.this, R.layout.detail_book, null);
                     TextView title = view.findViewById(R.id.title);
                     title.setText(map.get("title").toString());
+                    title.setTypeface(null, Typeface.BOLD);
 
                     int intPrice = Integer.parseInt(map.get("price").toString());
                     DecimalFormat df = new DecimalFormat("#,###원");
