@@ -57,7 +57,7 @@ public class ReadActivity extends AppCompatActivity {
                         //System.out.println(vo.toString());
                         edtTitle.setText(vo.getTitle());
                         edtContents.setText(vo.getContents());
-                        if(user.getEmail().equals(vo.getEmail())) {
+                        if(!user.getEmail().equals(vo.getEmail())) {
                             edtTitle.setEnabled(false);
                             edtContents.setEnabled(false);
                             btnSave.setVisibility(View.GONE);

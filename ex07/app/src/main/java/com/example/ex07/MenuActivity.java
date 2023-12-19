@@ -22,7 +22,7 @@ public class MenuActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser(); // Firebase에서 현재 인증된 사용자 정보 가져오기
 
         // 액션바 설정
-        getSupportActionBar().setTitle("선택" + user.getEmail()); // 액션바에 현재 사용자 이메일을 표시
+        getSupportActionBar().setTitle("선택: " + user.getEmail()); // 액션바에 현재 사용자 이메일을 표시
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 뒤로 가기 버튼 활성화
 
         //채팅버튼을 누르면 ChatActivity로 이동
