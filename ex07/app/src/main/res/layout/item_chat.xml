@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginBottom="20sp"
+    android:padding="10sp"
+    android:background="#eeeeee"
+    android:id="@+id/item">
+
+    <TextView
+        android:id="@+id/txtContents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="내용출력"
+        android:textSize="15sp"
+        android:padding="8sp"
+        android:background="@drawable/bubble"
+        android:layout_marginBottom="3sp"/>
+
+    <TextView
+        android:id="@+id/txtDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="작성날짜시간"
+        android:textSize="10sp"/>
+
+    <TextView
+        android:id="@+id/txtEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="작성자"
+        android:textSize="10sp"/>
+
+</LinearLayout>
