@@ -85,7 +85,7 @@ public class ChatActivity extends AppCompatActivity {
         list.setLayoutManager(new LinearLayoutManager(this));
     }//OnCreate
 
-    // 데이터 읽어보기
+    // 데이터 읽어오기
     public void getList(FirebaseDatabase db, String id) {
         DatabaseReference ref = db.getReference("shop_chat/" + id);
         ref.addChildEventListener(new ChildEventListener() {
@@ -168,7 +168,7 @@ public class ChatActivity extends AppCompatActivity {
                 setRoundedBackground(holder.contents, "#ffffff", 20);
             }
 
-            //내용을 길게 눌렀을때
+            //내용을 길게 눌렀을때 - 삭제
             holder.contents.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
